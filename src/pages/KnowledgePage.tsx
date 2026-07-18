@@ -10,7 +10,7 @@ interface KnowledgeItem {
   created_at: string;
 }
 
-const API_URL = 'http://localhost:3000/api/knowledge';
+const API_URL = `${import.meta.env.VITE_API_URL}/knowledge`;
 
 export default function KnowledgePage() {
   const { session } = useAuth();

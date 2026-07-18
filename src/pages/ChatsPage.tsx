@@ -11,7 +11,7 @@ interface ChatMessage {
   timestamp: string;
 }
 
-const API_URL = 'http://localhost:3000/api/chats';
+const API_URL = `${import.meta.env.VITE_API_URL}/chats`;
 
 export default function ChatsPage() {
   const { session } = useAuth();

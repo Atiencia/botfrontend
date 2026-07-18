@@ -3,7 +3,7 @@ import { Key, Bot, Save, Loader2, Link2, ShieldCheck, CheckCircle2 } from 'lucid
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
-const API_URL = 'http://localhost:3000/api/bot-config';
+const API_URL = `${import.meta.env.VITE_API_URL}/bot-config`;
 
 export default function SettingsPage() {
   const { session } = useAuth();
