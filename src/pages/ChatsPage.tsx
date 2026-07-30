@@ -53,9 +53,11 @@ export default function ChatsPage() {
           ) : (
             chats.map((msg) => {
               const isBot = msg.role === 'assistant';
+              // En la app de Instagram (para el dueño de la página), los mensajes de su página (Bot) 
+              // salen a la DERECHA, y los del cliente salen a la IZQUIERDA.
               return (
-                <div key={msg.id} className={`flex ${isBot ? 'justify-start' : 'justify-end'} animate-in fade-in slide-in-from-bottom-2`}>
-                  <div className={`flex max-w-[80%] space-x-3 ${isBot ? 'flex-row' : 'flex-row-reverse space-x-reverse'}`}>
+                <div key={msg.id} className={`flex ${isBot ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
+                  <div className={`flex max-w-[80%] space-x-3 ${isBot ? 'flex-row-reverse space-x-reverse' : 'flex-row'}`}>
                     
                     <div className="shrink-0 mt-1">
                       {isBot ? (
@@ -69,17 +71,17 @@ export default function ChatsPage() {
                       )}
                     </div>
 
-                    <div className={`flex flex-col ${isBot ? 'items-start' : 'items-end'}`}>
+                    <div className={`flex flex-col ${isBot ? 'items-end' : 'items-start'}`}>
                       <div className="text-xs text-gray-500 mb-1 px-1 flex items-center space-x-2">
-                        <span>{isBot ? 'Eli' : `Instagram: ${msg.instagram_user_id}`}</span>
+                        <span>{isBot ? 'Eli (Bot)' : `Cliente: ${msg.instagram_user_id}`}</span>
                         <span>•</span>
                         <span>{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
                       
                       <div className={`px-4 py-3 rounded-2xl whitespace-pre-wrap text-sm shadow-sm ${
                         isBot 
-                          ? 'bg-gray-800/80 text-gray-100 rounded-tl-none border border-gray-700' 
-                          : 'bg-indigo-600 text-white rounded-tr-none'
+                          ? 'bg-indigo-600 text-white rounded-tr-none' // Bot a la derecha
+                          : 'bg-gray-800/80 text-gray-100 rounded-tl-none border border-gray-700' // Usuario a la izquierda
                       }`}>
                         {msg.content}
                       </div>
