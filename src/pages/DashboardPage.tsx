@@ -42,7 +42,6 @@ export default function DashboardPage() {
     return (
       <div className="h-screen flex items-center justify-center text-indigo-400 gap-3">
         <Loader2 className="w-8 h-8 animate-spin" />
-        <span className="font-medium">Cargando métricas...</span>
       </div>
     );
   }
