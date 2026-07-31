@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
-import { MessageSquare, BookOpen, Settings, Bot, LogOut } from 'lucide-react';
+import { MessageSquare, BookOpen, Settings, Bot, LogOut, Activity } from 'lucide-react';
 import KnowledgePage from './pages/KnowledgePage';
 import ChatsPage from './pages/ChatsPage';
 import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import SimulatorPage from './pages/SimulatorPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './lib/supabase';
@@ -14,6 +16,7 @@ function Sidebar() {
   const { user } = useAuth();
   
   const navItems = [
+    { path: '/dashboard', label: 'Métricas', icon: <Activity className="w-5 h-5" /> },
     { path: '/', label: 'Conocimiento', icon: <BookOpen className="w-5 h-5" /> },
     { path: '/chats', label: 'Conversaciones', icon: <MessageSquare className="w-5 h-5" /> },
     { path: '/settings', label: 'Configuración', icon: <Settings className="w-5 h-5" /> },
@@ -98,12 +101,14 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public Route */}
+          {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/demo" element={<SimulatorPage />} />
           
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/" element={<KnowledgePage />} />
               <Route path="/chats" element={<ChatsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
