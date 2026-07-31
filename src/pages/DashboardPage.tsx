@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Users, MessageCircle, Bot } from 'lucide-react';
+import { Users, MessageCircle, Bot, Loader2 } from 'lucide-react';
 
 const API_URL = `${import.meta.env.VITE_API_URL}/analytics`;
 
@@ -13,6 +13,8 @@ export default function DashboardPage() {
     totalBotMessages: number;
     chartData: any[];
   } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (session?.access_token) {
@@ -22,17 +24,37 @@ export default function DashboardPage() {
 
   const fetchAnalytics = async () => {
     try {
+      setIsLoading(true);
       const res = await axios.get(API_URL, {
         headers: { Authorization: `Bearer ${session?.access_token}` }
       });
       setData(res.data);
-    } catch (error) {
-      console.error('Error fetching analytics', error);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching analytics', err);
+      setError('Hubo un error al cargar las métricas. Comprueba la conexión o asegúrate de haber actualizado el backend.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (!data) {
-    return <div className="h-screen flex items-center justify-center text-gray-400">Cargando métricas...</div>;
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center text-indigo-400 gap-3">
+        <Loader2 className="w-8 h-8 animate-spin" />
+        <span className="font-medium">Cargando métricas...</span>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-6 rounded-2xl max-w-md text-center">
+          {error || 'No se pudieron cargar los datos'}
+        </div>
+      </div>
+    );
   }
 
   return (
