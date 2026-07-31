@@ -199,7 +199,7 @@ export default function SettingsPage() {
               <label className="block text-sm font-medium text-gray-400 mb-2">Verify Token (Para el Webhook)</label>
               <div className="relative">
                 <input
-                  type="text"
+                  type="password"
                   value={config.meta_verify_token}
                   onChange={(e) => setConfig({...config, meta_verify_token: e.target.value})}
                   className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono text-sm"
