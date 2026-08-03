@@ -127,6 +127,24 @@ export default function LoginPage() {
               {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
             </button>
           </div>
+
+          {/* Separador */}
+          <div className="flex items-center my-6">
+            <div className="flex-1 border-t border-gray-800"></div>
+            <span className="px-4 text-xs text-gray-500 uppercase tracking-wider">o</span>
+            <div className="flex-1 border-t border-gray-800"></div>
+          </div>
+
+          {/* Botón Demo */}
+          <button
+            onClick={() => navigate('/demo')}
+            className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 hover:text-white transition-all group"
+          >
+            <Bot className="w-5 h-5" />
+            <span className="font-medium">Probar Demo en Vivo</span>
+            <ArrowRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+          </button>
+          <p className="text-center text-xs text-gray-600 mt-2">Sin registro — prueba la IA ahora mismo</p>
         </div>
       </div>
     </div>
