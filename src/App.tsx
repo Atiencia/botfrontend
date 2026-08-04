@@ -6,6 +6,7 @@ import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import SimulatorPage from './pages/SimulatorPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './lib/supabase';
@@ -104,6 +105,7 @@ export default function App() {
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/demo" element={<SimulatorPage />} />
+          <Route path="/privacidad" element={<PrivacyPolicyPage />} />
           
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
