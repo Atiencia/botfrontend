@@ -145,9 +145,10 @@ export default function ChatsPage() {
       setNewMessage('');
       // Refrescar chats inmediatamente después de enviar
       fetchChats(selectedCustomer.instagram_user_id);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending message', error);
-      alert('Error al enviar el mensaje. Revisa la consola o asegúrate de que el bot tenga el Token de Meta configurado.');
+      const errorMsg = error.response?.data?.error || 'Error desconocido';
+      alert(`Error de Meta API: ${errorMsg}\n\nSi estás probando desde el "Simulador", esto es normal porque no se pueden enviar mensajes de Facebook a un usuario simulado/falso.`);
     } finally {
       setSending(false);
     }
