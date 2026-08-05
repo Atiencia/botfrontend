@@ -251,7 +251,7 @@ export default function ChatsPage() {
                     No hay mensajes en esta conversación.
                   </div>
                 ) : (
-                  chats.map((msg) => {
+                  [...chats].reverse().map((msg) => {
                     const isBot = msg.role === 'assistant';
                     return (
                       <div key={msg.id} className={`flex ${isBot ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
