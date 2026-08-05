@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -36,6 +37,9 @@ export default function ChatsPage() {
   // Referencia para comparar cambios y lanzar notificaciones
   const prevCustomersRef = useRef<Customer[]>([]);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const clienteFromUrl = searchParams.get('cliente');
+
   // Pedir permiso de notificaciones al cargar
   useEffect(() => {
     if ('Notification' in window && Notification.permission === 'default') {
@@ -51,6 +55,19 @@ export default function ChatsPage() {
       return () => clearInterval(interval);
     }
   }, [session]);
+
+  // Si hay un cliente en la URL y ya cargaron los clientes, autoseleccionarlo
+  useEffect(() => {
+    if (clienteFromUrl && customers.length > 0) {
+      const customerToSelect = customers.find(c => c.instagram_user_id === clienteFromUrl);
+      if (customerToSelect && (!selectedCustomer || selectedCustomer.id !== customerToSelect.id)) {
+        setSelectedCustomer(customerToSelect);
+        // Limpiamos la URL para no forzar la selección infinitamente si cambian de chat
+        searchParams.delete('cliente');
+        setSearchParams(searchParams, { replace: true });
+      }
+    }
+  }, [clienteFromUrl, customers, selectedCustomer, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (session?.access_token && selectedCustomer) {

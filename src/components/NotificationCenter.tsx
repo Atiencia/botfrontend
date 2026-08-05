@@ -57,7 +57,9 @@ export default function NotificationCenter() {
       >
         <Bell className="w-5 h-5" />
         {pendingChats.length > 0 && (
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-gray-950 animate-pulse"></span>
+          <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white px-1 shadow-lg ring-2 ring-gray-950 animate-bounce">
+            {pendingChats.length}
+          </span>
         )}
       </button>
 
@@ -75,7 +77,7 @@ export default function NotificationCenter() {
               pendingChats.map(c => (
                 <Link
                   key={c.id}
-                  to="/chats"
+                  to={`/chats?cliente=${c.instagram_user_id}`}
                   onClick={() => setIsOpen(false)}
                   className="block p-3 border-b border-gray-800/50 hover:bg-gray-800 transition-colors"
                 >
