@@ -11,6 +11,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './lib/supabase';
 
+import NotificationCenter from './components/NotificationCenter';
+
 function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,15 +32,18 @@ function Sidebar() {
 
   return (
     <aside className="w-64 h-screen border-r border-gray-800 bg-gray-950/50 backdrop-blur-xl flex flex-col z-20 relative">
-      <div className="p-6 flex items-center space-x-3 border-b border-gray-800">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-          <Bot className="w-6 h-6 text-white" />
+      <div className="p-6 flex items-center justify-between border-b border-gray-800">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <Bot className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-blue-400">
+              Eli
+            </h1>
+          </div>
         </div>
-        <div>
-          <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-blue-400">
-            Eli Dashboard
-          </h1>
-        </div>
+        <NotificationCenter />
       </div>
       
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
