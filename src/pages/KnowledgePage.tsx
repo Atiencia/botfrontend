@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Pencil, Trash2, Save, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
@@ -15,6 +15,7 @@ const API_URL = `${import.meta.env.VITE_API_URL}/knowledge`;
 export default function KnowledgePage() {
   const { session } = useAuth();
   const [items, setItems] = useState<KnowledgeItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   
@@ -32,10 +33,13 @@ export default function KnowledgePage() {
 
   const fetchKnowledge = async () => {
     try {
+      setIsLoading(true);
       const res = await axios.get(API_URL, getHeaders());
       setItems(res.data);
     } catch (error) {
       console.error('Error fetching knowledge', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,33 +101,38 @@ export default function KnowledgePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((item) => (
-          <div key={item.id} className="glass rounded-2xl p-6 transition-all duration-300 hover:border-gray-600 hover:-translate-y-1">
-            <div className="flex justify-between items-start mb-4">
-              <span className="inline-block px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-xs font-medium border border-indigo-500/30">
-                {item.category}
-              </span>
-              <div className="flex space-x-2">
-                <button onClick={() => openModal(item)} className="text-gray-400 hover:text-indigo-400 transition-colors">
-                  <Pencil className="w-4 h-4" />
-                </button>
-                <button onClick={() => handleDelete(item.id)} className="text-gray-400 hover:text-red-400 transition-colors">
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            <p className="text-gray-300 text-sm whitespace-pre-wrap line-clamp-6">
-              {item.content}
-            </p>
-            <div className="mt-4 pt-4 border-t border-gray-800 text-xs text-gray-500">
-              Creado: {new Date(item.created_at).toLocaleDateString()}
-            </div>
+        {isLoading ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-400">
+            <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
           </div>
-        ))}
-        {items.length === 0 && (
+        ) : items.length === 0 ? (
           <div className="col-span-full text-center py-20 text-gray-500 glass rounded-2xl border-dashed">
             No hay información en la base de conocimiento. Agrega algo para que Eli pueda aprender.
           </div>
+        ) : (
+          items.map((item) => (
+            <div key={item.id} className="glass rounded-2xl p-6 transition-all duration-300 hover:border-gray-600 hover:-translate-y-1">
+              <div className="flex justify-between items-start mb-4">
+                <span className="inline-block px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-xs font-medium border border-indigo-500/30">
+                  {item.category}
+                </span>
+                <div className="flex space-x-2">
+                  <button onClick={() => openModal(item)} className="text-gray-400 hover:text-indigo-400 transition-colors">
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => handleDelete(item.id)} className="text-gray-400 hover:text-red-400 transition-colors">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              <p className="text-gray-300 text-sm whitespace-pre-wrap line-clamp-6">
+                {item.content}
+              </p>
+              <div className="mt-4 pt-4 border-t border-gray-800 text-xs text-gray-500">
+                Creado: {new Date(item.created_at).toLocaleDateString()}
+              </div>
+            </div>
+          ))
         )}
       </div>
 

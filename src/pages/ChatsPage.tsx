@@ -26,7 +26,9 @@ const API_CUSTOMERS = `${import.meta.env.VITE_API_URL}/customers`;
 export default function ChatsPage() {
   const { session } = useAuth();
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [isCustomersLoading, setIsCustomersLoading] = useState(true);
   const [chats, setChats] = useState<ChatMessage[]>([]);
+  const [isChatsLoading, setIsChatsLoading] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -51,13 +53,13 @@ export default function ChatsPage() {
   useEffect(() => {
     if (!session?.access_token) return;
 
-    fetchCustomers();
+    fetchCustomers(true); // Pasar true para la carga inicial
     
     // Escuchar cambios en la tabla customers (cuando se pausa/reanuda el bot)
     const customersChannel = supabase
       .channel('customers_realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'customers' }, () => {
-        fetchCustomers();
+        fetchCustomers(false); // Falso en realtime para no parpadear
       })
       .subscribe();
 
@@ -82,13 +84,13 @@ export default function ChatsPage() {
   useEffect(() => {
     if (!session?.access_token || !selectedCustomer) return;
 
-    fetchChats(selectedCustomer.instagram_user_id);
+    fetchChats(selectedCustomer.instagram_user_id, true); // Pasar true para la carga inicial
 
     // Escuchar nuevos mensajes en el chat actual
     const chatsChannel = supabase
       .channel('chats_realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chats' }, () => {
-        fetchChats(selectedCustomer.instagram_user_id);
+        fetchChats(selectedCustomer.instagram_user_id, false); // Falso en realtime
       })
       .subscribe();
 
@@ -104,8 +106,9 @@ export default function ChatsPage() {
     }
   }, [chats]);
 
-  const fetchCustomers = async () => {
+  const fetchCustomers = async (showLoading = false) => {
     try {
+      if (showLoading) setIsCustomersLoading(true);
       const res = await axios.get(API_CUSTOMERS, {
         headers: { Authorization: `Bearer ${session?.access_token}` }
       });
@@ -129,11 +132,14 @@ export default function ChatsPage() {
       setCustomers(newCustomers);
     } catch (error) {
       console.error('Error fetching customers', error);
+    } finally {
+      if (showLoading) setIsCustomersLoading(false);
     }
   };
 
-  const fetchChats = async (instagramUserId: string) => {
+  const fetchChats = async (instagramUserId: string, showLoading = false) => {
     try {
+      if (showLoading) setIsChatsLoading(true);
       const res = await axios.get(API_CHATS, {
         headers: { Authorization: `Bearer ${session?.access_token}` }
       });
@@ -146,6 +152,8 @@ export default function ChatsPage() {
       });
     } catch (error) {
       console.error('Error fetching chats', error);
+    } finally {
+      if (showLoading) setIsChatsLoading(false);
     }
   };
 
@@ -217,7 +225,11 @@ export default function ChatsPage() {
             </div>
           </div>
           <div className="flex-1 overflow-y-auto">
-            {filteredCustomers.length === 0 ? (
+            {isCustomersLoading ? (
+              <div className="p-10 flex flex-col items-center justify-center text-gray-500">
+                <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+              </div>
+            ) : filteredCustomers.length === 0 ? (
               <div className="p-4 text-sm text-gray-500 text-center">No hay clientes recientes.</div>
             ) : (
               filteredCustomers.map(c => (
@@ -282,7 +294,11 @@ export default function ChatsPage() {
 
               {/* Messages */}
               <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-6 space-y-6">
-                {chats.length === 0 ? (
+                {isChatsLoading ? (
+                  <div className="h-full flex flex-col items-center justify-center text-gray-500 text-sm">
+                    <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+                  </div>
+                ) : chats.length === 0 ? (
                   <div className="h-full flex items-center justify-center text-gray-500 text-sm">
                     No hay mensajes en esta conversación.
                   </div>
