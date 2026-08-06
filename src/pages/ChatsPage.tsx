@@ -1,7 +1,7 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2, ArrowLeft } from 'lucide-react';
+import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../lib/supabase';
@@ -126,7 +126,6 @@ export default function ChatsPage() {
       });
       
       setNewMessage('');
-      // Refrescar chats inmediatamente después de enviar
       fetchChats(selectedCustomer.instagram_user_id);
     } catch (error: any) {
       console.error('Error sending message', error);
@@ -138,6 +137,75 @@ export default function ChatsPage() {
     } finally {
       setSending(false);
     }
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedCustomer || !session?.access_token) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Por favor selecciona una imagen válida.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('La imagen no debe superar los 5MB.');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${selectedCustomer.instagram_user_id}_${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('chat-images')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('chat-images')
+        .getPublicUrl(fileName);
+
+      await axios.post(`${API_CHATS}/send`, {
+        instagram_user_id: selectedCustomer.instagram_user_id,
+        image_url: publicUrl,
+        message: newMessage.trim()
+      }, {
+        headers: { Authorization: `Bearer ${session.access_token}` }
+      });
+
+      setNewMessage('');
+      fetchChats(selectedCustomer.instagram_user_id);
+    } catch (error: any) {
+      console.error('Error uploading image', error);
+      toast.error('Error al subir la imagen. Verifica que el Bucket "chat-images" esté creado.', { duration: 5000 });
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const renderMessageContent = (content: string) => {
+    if (content.startsWith('[IMAGE: ') && content.includes(']')) {
+      const tagEndIndex = content.indexOf(']');
+      const imageUrl = content.substring(8, tagEndIndex);
+      const remainingText = content.substring(tagEndIndex + 1).trim();
+      
+      return (
+        <div className="flex flex-col gap-2">
+          <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+            <img src={imageUrl} alt="Adjunto" className="max-w-[200px] max-h-[300px] object-contain rounded-lg border border-gray-700 hover:opacity-90 transition-opacity" />
+          </a>
+          {remainingText && <span>{remainingText}</span>}
+        </div>
+      );
+    }
+    return <span>{content}</span>;
   };
 
   const filteredCustomers = customers.filter(c => 
@@ -278,7 +346,7 @@ export default function ChatsPage() {
                                 ? 'bg-sky-600 text-white rounded-tr-none' 
                                 : 'bg-gray-800/80 text-gray-100 rounded-tl-none border border-gray-700'
                             }`}>
-                              {msg.content}
+                              {renderMessageContent(msg.content)}
                             </div>
                           </div>
                         </div>
@@ -291,18 +359,33 @@ export default function ChatsPage() {
               {/* Chat Input */}
               <div className="p-4 border-t border-gray-800 bg-gray-900/40 shrink-0">
                 {!selectedCustomer.is_bot_active ? (
-                  <form onSubmit={handleSendMessage} className="flex items-center gap-3">
+                  <form onSubmit={handleSendMessage} className="flex items-center gap-2 md:gap-3">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingImage || sending}
+                      className="p-3 text-sky-400 hover:bg-sky-500/10 rounded-xl transition-colors disabled:opacity-50 border border-transparent"
+                    >
+                      {uploadingImage ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
+                    </button>
                     <input
                       type="text"
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
-                      placeholder="Escribe un mensaje como humano..."
+                      placeholder="Mensaje..."
                       className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:ring-1 focus:ring-sky-500"
-                      disabled={sending}
+                      disabled={sending || uploadingImage}
                     />
                     <button
                       type="submit"
-                      disabled={!newMessage.trim() || sending}
+                      disabled={(!newMessage.trim() && !fileInputRef.current?.value) || sending || uploadingImage}
                       className="px-4 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl shadow-lg flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
