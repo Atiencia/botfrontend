@@ -14,7 +14,7 @@ import { supabase } from './lib/supabase';
 
 import NotificationCenter from './components/NotificationCenter';
 import { Toaster } from 'react-hot-toast';
-import { ChatProvider } from './context/ChatContext';
+import { AppProvider } from './context/AppContext';
 
 function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: boolean) => void }) {
   const location = useLocation();
@@ -141,7 +141,7 @@ function DashboardLayout() {
 export default function App() {
   return (
     <AuthProvider>
-      <ChatProvider>
+      <AppProvider>
         <Toaster 
           position="bottom-right"
           toastOptions={{
@@ -183,7 +183,7 @@ export default function App() {
             </Route>
           </Routes>
         </Router>
-      </ChatProvider>
+      </AppProvider>
     </AuthProvider>
   );
 }

@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useChatContext } from '../context/ChatContext';
+import { useAppContext } from '../context/AppContext';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
 
@@ -20,7 +20,7 @@ const API_CUSTOMERS = `${import.meta.env.VITE_API_URL}/customers`;
 
 export default function ChatsPage() {
   const { session } = useAuth();
-  const { customers, isCustomersLoading, fetchCustomers } = useChatContext();
+  const { customers, isCustomersLoading, fetchCustomers } = useAppContext();
   const [chats, setChats] = useState<ChatMessage[]>([]);
   const [isChatsLoading, setIsChatsLoading] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);

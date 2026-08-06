@@ -2,15 +2,20 @@ import { useState, useEffect } from 'react';
 import { Key, Bot, Save, Loader2, Link2, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
+
+import { useAppContext } from '../context/AppContext';
 
 const API_URL = `${import.meta.env.VITE_API_URL}/bot-config`;
 
 export default function SettingsPage() {
   const { session } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const { config: globalConfig, isConfigLoading: loading, fetchConfig } = useAppContext();
+  
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   
+  // Estado local para edición, inicializado con la caché global
   const [config, setConfig] = useState({
     system_prompt: '',
     model: 'llama-3.1-8b-instant',
@@ -20,34 +25,16 @@ export default function SettingsPage() {
     is_active: true
   });
 
+  // Cuando la caché global carga, actualizamos el estado local de edición
+  useEffect(() => {
+    if (globalConfig) {
+      setConfig(globalConfig);
+    }
+  }, [globalConfig]);
+
   const getHeaders = () => ({
     headers: { Authorization: `Bearer ${session?.access_token}` }
   });
-
-  useEffect(() => {
-    if (session?.access_token) {
-      fetchConfig();
-    }
-  }, [session]);
-
-  const fetchConfig = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(API_URL, getHeaders());
-      setConfig({
-        system_prompt: res.data.system_prompt || '',
-        model: res.data.model || 'llama-3.1-8b-instant',
-        temperature: res.data.temperature ?? 0.7,
-        meta_access_token: res.data.meta_access_token || '',
-        meta_verify_token: res.data.meta_verify_token || '',
-        is_active: res.data.is_active ?? true
-      });
-    } catch (error) {
-      console.error('Error fetching config', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSave = async () => {
     try {
@@ -55,10 +42,12 @@ export default function SettingsPage() {
       setSuccess(false);
       await axios.post(API_URL, config, getHeaders());
       setSuccess(true);
+      toast.success('Configuración guardada exitosamente');
+      fetchConfig(false); // Refresca caché global silenciosamente
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
       console.error('Error saving config', error);
-      alert('Error al guardar la configuración');
+      toast.error('Error al guardar la configuración');
     } finally {
       setSaving(false);
     }
@@ -138,7 +127,7 @@ export default function SettingsPage() {
               />
             </div>
             
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">Modelo de Groq</label>
                 <input

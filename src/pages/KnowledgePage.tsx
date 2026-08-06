@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Plus, Pencil, Trash2, Save, X, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -11,38 +11,26 @@ interface KnowledgeItem {
   created_at: string;
 }
 
+import { useAppContext } from '../context/AppContext';
+import ConfirmModal from '../components/ConfirmModal';
+
 const API_URL = `${import.meta.env.VITE_API_URL}/knowledge`;
 
 export default function KnowledgePage() {
   const { session } = useAuth();
-  const [items, setItems] = useState<KnowledgeItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { knowledge: items, isKnowledgeLoading: isLoading, fetchKnowledge } = useAppContext();
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  
+  // Estado para modal de confirmación
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({ category: '', content: '' });
 
   const getHeaders = () => ({
     headers: { Authorization: `Bearer ${session?.access_token}` }
   });
-
-  useEffect(() => {
-    if (session?.access_token) {
-      fetchKnowledge();
-    }
-  }, [session]);
-
-  const fetchKnowledge = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get(API_URL, getHeaders());
-      setItems(res.data);
-    } catch (error) {
-      console.error('Error fetching knowledge', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const openModal = (item?: KnowledgeItem) => {
     if (item) {
@@ -78,12 +66,17 @@ export default function KnowledgePage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('¿Seguro que deseas eliminar este conocimiento?')) return;
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+  };
+
+  const performDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      await axios.delete(`${API_URL}/${id}`, getHeaders());
+      await axios.delete(`${API_URL}/${itemToDelete}`, getHeaders());
       toast.success('Conocimiento eliminado');
-      fetchKnowledge();
+      fetchKnowledge(false);
+      setItemToDelete(null);
     } catch (error) {
       console.error('Error deleting knowledge', error);
       toast.error('No se pudo eliminar el conocimiento');
@@ -91,15 +84,15 @@ export default function KnowledgePage() {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto pb-24 md:pb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-white mb-2">Base de Conocimiento</h2>
-          <p className="text-gray-400">Administra la información que Eli utilizará para responder.</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Base de Conocimiento</h2>
+          <p className="text-gray-400 text-sm md:text-base">Administra la información que Eli utilizará para responder.</p>
         </div>
         <button
           onClick={() => openModal()}
-          className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/30"
+          className="w-full md:w-auto flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/30"
         >
           <Plus className="w-5 h-5" />
           <span>Agregar Conocimiento</span>
@@ -126,7 +119,7 @@ export default function KnowledgePage() {
                   <button onClick={() => openModal(item)} className="text-gray-400 hover:text-indigo-400 transition-colors">
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDelete(item.id)} className="text-gray-400 hover:text-red-400 transition-colors">
+                  <button onClick={() => handleDeleteClick(item.id)} className="text-gray-400 hover:text-red-400 transition-colors">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -200,6 +193,15 @@ export default function KnowledgePage() {
           </div>
         </div>
       )}
+
+      {/* Modal de Confirmación para Eliminar */}
+      <ConfirmModal 
+        isOpen={!!itemToDelete}
+        title="Eliminar Conocimiento"
+        message="¿Estás seguro que deseas eliminar esta información? Eli ya no podrá usarla para responder."
+        onConfirm={performDelete}
+        onCancel={() => setItemToDelete(null)}
+      />
     </div>
   );
 }

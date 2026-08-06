@@ -1,42 +1,9 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Users, MessageCircle, Bot, Loader2 } from 'lucide-react';
-
-const API_URL = `${import.meta.env.VITE_API_URL}/analytics`;
+import { useAppContext } from '../context/AppContext';
 
 export default function DashboardPage() {
-  const { session } = useAuth();
-  const [data, setData] = useState<{
-    totalCustomers: number;
-    totalBotMessages: number;
-    chartData: any[];
-  } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (session?.access_token) {
-      fetchAnalytics();
-    }
-  }, [session]);
-
-  const fetchAnalytics = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get(API_URL, {
-        headers: { Authorization: `Bearer ${session?.access_token}` }
-      });
-      setData(res.data);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching analytics', err);
-      setError('Hubo un error al cargar las métricas. Comprueba la conexión o asegúrate de haber actualizado el backend.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { analyticsData: data, isAnalyticsLoading: isLoading, analyticsError: error } = useAppContext();
 
   if (isLoading) {
     return (

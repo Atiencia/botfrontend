@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useChatContext } from '../context/ChatContext';
+import { useAppContext } from '../context/AppContext';
 
 export default function NotificationCenter() {
-  const { customers } = useChatContext();
+  const { customers } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
