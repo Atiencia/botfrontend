@@ -41,7 +41,7 @@ export default function NotificationCenter() {
     // Suscripción a Tiempo Real usando Supabase
     const channel = supabase
       .channel('notification_center_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'customers' }, (payload) => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'customers' }, () => {
         // Refrescar al instante ante cualquier cambio
         fetchPending();
       })
