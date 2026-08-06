@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { useNavigate } from 'react-router-dom';
-import { Bot, Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Bot, Mail, Lock, Loader2, ArrowRight, Home } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
@@ -179,12 +179,17 @@ export default function LoginPage() {
             <span className="font-medium">Probar Demo en Vivo</span>
             <ArrowRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
           </button>
-          <p className="text-center text-xs text-gray-600 mt-2">Sin registro â€” prueba la IA ahora mismo</p>
+          <p className="text-center text-xs text-gray-600 mt-2">Sin registro - prueba la IA ahora mismo</p>
+
+          <div className="mt-6 text-center">
+            <Link to="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors">
+              <Home className="w-4 h-4" />
+              <span>Volver al inicio</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
   );
-}
-
 
 
