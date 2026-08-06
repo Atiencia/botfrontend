@@ -62,16 +62,16 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto pb-24">
-      <div className="flex justify-between items-end mb-8">
+    <div className="p-4 md:p-8 max-w-4xl mx-auto pb-24">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-white mb-2">Configuración</h2>
-          <p className="text-gray-400">Personaliza a Eli y conéctalo con tu página de Meta.</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Configuración</h2>
+          <p className="text-gray-400 text-sm md:text-base">Personaliza a Eli y conéctalo con tu página de Meta.</p>
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/30 font-medium disabled:opacity-50"
+          className="w-full md:w-auto flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/30 font-medium disabled:opacity-50"
         >
           {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
           <span>{saving ? 'Guardando...' : 'Guardar Cambios'}</span>
@@ -88,15 +88,15 @@ export default function SettingsPage() {
       <div className="space-y-6">
         
         {/* Core Bot Setup */}
-        <div className="glass rounded-2xl p-8 border border-gray-800">
-          <div className="flex items-center justify-between mb-6">
+        <div className="glass rounded-2xl p-4 md:p-8 border border-gray-800">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
-                <Bot className="w-6 h-6" />
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+                <Bot className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white">Comportamiento Base</h3>
-                <p className="text-gray-400 text-sm">Define la personalidad y modelo de Eli.</p>
+                <h3 className="text-lg md:text-xl font-semibold text-white">Comportamiento Base</h3>
+                <p className="text-gray-400 text-xs md:text-sm">Define la personalidad y modelo de Eli.</p>
               </div>
             </div>
             
@@ -155,14 +155,14 @@ export default function SettingsPage() {
         </div>
 
         {/* Meta Integration Section */}
-        <div className="glass rounded-2xl p-8 border border-gray-800">
+        <div className="glass rounded-2xl p-4 md:p-8 border border-gray-800">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400">
-              <Link2 className="w-6 h-6" />
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+              <Link2 className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-white">Conexión con Meta Webhooks</h3>
-              <p className="text-gray-400 text-sm">Claves para enlazar directamente con Instagram / Messenger</p>
+              <h3 className="text-lg md:text-xl font-semibold text-white">Conexión con Meta Webhooks</h3>
+              <p className="text-gray-400 text-xs md:text-sm">Claves para enlazar con Instagram / Messenger</p>
             </div>
           </div>
 
