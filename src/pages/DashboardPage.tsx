@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+﻿import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Users, MessageCircle, Bot, Loader2 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
@@ -7,7 +7,7 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center text-indigo-400 gap-3">
+      <div className="h-screen flex items-center justify-center text-sky-400 gap-3">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
@@ -26,15 +26,15 @@ export default function DashboardPage() {
   return (
     <div className="p-8 max-w-6xl mx-auto h-screen flex flex-col">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">Métricas de Rendimiento</h2>
+        <h2 className="text-3xl font-bold text-white mb-2">MÃ©tricas de Rendimiento</h2>
         <p className="text-gray-400">Analiza el volumen de conversaciones y el ahorro de tiempo gracias a tu bot.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="glass p-6 rounded-2xl border border-gray-800">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center">
-              <Users className="w-6 h-6 text-indigo-400" />
+            <div className="w-12 h-12 rounded-full bg-sky-500/20 flex items-center justify-center">
+              <Users className="w-6 h-6 text-sky-400" />
             </div>
             <div>
               <p className="text-sm text-gray-400">Total Clientes</p>
@@ -72,7 +72,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="flex-1 glass rounded-2xl border border-gray-800 p-6 flex flex-col">
-        <h3 className="text-xl font-semibold text-white mb-6">Actividad de los últimos 7 días</h3>
+        <h3 className="text-xl font-semibold text-white mb-6">Actividad de los Ãºltimos 7 dÃ­as</h3>
         <div className="flex-1 min-h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -96,3 +96,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

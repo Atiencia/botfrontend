@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { Send, Bot, User, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,7 @@ interface Message {
 
 export default function SimulatorPage() {
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', role: 'assistant', content: '¡Hola! Soy Eli, la asistente virtual. ¿En qué te puedo ayudar hoy?' }
+    { id: '1', role: 'assistant', content: 'Â¡Hola! Soy Eli, la asistente virtual. Â¿En quÃ© te puedo ayudar hoy?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +36,7 @@ export default function SimulatorPage() {
     setIsLoading(true);
 
     try {
-      const chatHistory = messages.map(m => ({ role: m.role, content: m.content })).slice(-10); // Mandar los últimos 10
+      const chatHistory = messages.map(m => ({ role: m.role, content: m.content })).slice(-10); // Mandar los Ãºltimos 10
       const res = await axios.post(API_URL, {
         message: userMessage.content,
         chatHistory
@@ -46,7 +46,7 @@ export default function SimulatorPage() {
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Error simulating chat:', error);
-      const errorMessage = { id: (Date.now() + 1).toString(), role: 'assistant' as const, content: 'Lo siento, hubo un error de conexión con mi servidor.' };
+      const errorMessage = { id: (Date.now() + 1).toString(), role: 'assistant' as const, content: 'Lo siento, hubo un error de conexiÃ³n con mi servidor.' };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -56,7 +56,7 @@ export default function SimulatorPage() {
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
       {/* Background Gradients */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-600/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
       
       <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[80vh] relative z-10">
@@ -66,13 +66,13 @@ export default function SimulatorPage() {
           <Link to="/" className="text-gray-400 hover:text-white transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
             <Bot className="w-6 h-6 text-white" />
           </div>
           <div>
             <h3 className="font-bold text-white leading-tight">Eli (Demo Bot)</h3>
             <span className="text-xs text-emerald-400 flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> En línea
+              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> En lÃ­nea
             </span>
           </div>
         </div>
@@ -86,7 +86,7 @@ export default function SimulatorPage() {
                 <div className={`flex max-w-[80%] space-x-2 ${isBot ? 'flex-row' : 'flex-row-reverse space-x-reverse'}`}>
                   <div className="shrink-0 mt-auto">
                     {isBot ? (
-                      <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center">
+                      <div className="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center">
                         <Bot className="w-3 h-3 text-white" />
                       </div>
                     ) : (
@@ -98,7 +98,7 @@ export default function SimulatorPage() {
                   <div className={`px-4 py-2.5 rounded-2xl whitespace-pre-wrap text-[15px] leading-relaxed shadow-sm ${
                     isBot 
                       ? 'bg-gray-800 text-gray-100 rounded-bl-none' 
-                      : 'bg-indigo-600 text-white rounded-br-none'
+                      : 'bg-sky-600 text-white rounded-br-none'
                   }`}>
                     {msg.content}
                   </div>
@@ -127,12 +127,12 @@ export default function SimulatorPage() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Escribe un mensaje..."
-            className="flex-1 bg-gray-900 border border-gray-700 text-gray-100 rounded-full px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="flex-1 bg-gray-900 border border-gray-700 text-gray-100 rounded-full px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-sky-500"
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white disabled:opacity-50 transition-opacity shrink-0"
+            className="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center text-white disabled:opacity-50 transition-opacity shrink-0"
           >
             <Send className="w-4 h-4 ml-1" />
           </button>
@@ -141,3 +141,4 @@ export default function SimulatorPage() {
     </div>
   );
 }
+

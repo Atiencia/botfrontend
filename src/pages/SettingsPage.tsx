@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Key, Bot, Save, Loader2, Link2, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -15,7 +15,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   
-  // Estado local para edición, inicializado con la caché global
+  // Estado local para ediciÃ³n, inicializado con la cachÃ© global
   const [config, setConfig] = useState({
     system_prompt: '',
     model: 'llama-3.1-8b-instant',
@@ -25,7 +25,7 @@ export default function SettingsPage() {
     is_active: true
   });
 
-  // Cuando la caché global carga, actualizamos el estado local de edición
+  // Cuando la cachÃ© global carga, actualizamos el estado local de ediciÃ³n
   useEffect(() => {
     if (globalConfig) {
       setConfig(globalConfig);
@@ -42,12 +42,12 @@ export default function SettingsPage() {
       setSuccess(false);
       await axios.post(API_URL, config, getHeaders());
       setSuccess(true);
-      toast.success('Configuración guardada exitosamente');
-      fetchConfig(false); // Refresca caché global silenciosamente
+      toast.success('ConfiguraciÃ³n guardada exitosamente');
+      fetchConfig(false); // Refresca cachÃ© global silenciosamente
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
       console.error('Error saving config', error);
-      toast.error('Error al guardar la configuración');
+      toast.error('Error al guardar la configuraciÃ³n');
     } finally {
       setSaving(false);
     }
@@ -56,7 +56,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-sky-500 animate-spin" />
       </div>
     );
   }
@@ -65,13 +65,13 @@ export default function SettingsPage() {
     <div className="p-4 md:p-8 max-w-4xl mx-auto pb-24">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Configuración</h2>
-          <p className="text-gray-400 text-sm md:text-base">Personaliza a Eli y conéctalo con tu página de Meta.</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">ConfiguraciÃ³n</h2>
+          <p className="text-gray-400 text-sm md:text-base">Personaliza a Eli y conÃ©ctalo con tu pÃ¡gina de Meta.</p>
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="w-full md:w-auto flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/30 font-medium disabled:opacity-50"
+          className="w-full md:w-auto flex items-center justify-center space-x-2 bg-sky-600 hover:bg-sky-700 text-white px-6 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-sky-600/30 font-medium disabled:opacity-50"
         >
           {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
           <span>{saving ? 'Guardando...' : 'Guardar Cambios'}</span>
@@ -81,7 +81,7 @@ export default function SettingsPage() {
       {success && (
         <div className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 flex items-center space-x-2 animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="w-5 h-5" />
-          <span>Configuración guardada exitosamente.</span>
+          <span>ConfiguraciÃ³n guardada exitosamente.</span>
         </div>
       )}
 
@@ -91,7 +91,7 @@ export default function SettingsPage() {
         <div className="glass rounded-2xl p-4 md:p-8 border border-gray-800">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
                 <Bot className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <div>
@@ -105,11 +105,11 @@ export default function SettingsPage() {
               <span className="text-sm font-medium text-gray-300">Estado del Bot:</span>
               <button
                 onClick={() => setConfig({...config, is_active: !config.is_active})}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${config.is_active ? 'bg-indigo-500' : 'bg-gray-600'}`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${config.is_active ? 'bg-sky-500' : 'bg-gray-600'}`}
               >
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${config.is_active ? 'translate-x-6' : 'translate-x-1'}`} />
               </button>
-              <span className={`text-sm font-bold ${config.is_active ? 'text-indigo-400' : 'text-gray-500'}`}>
+              <span className={`text-sm font-bold ${config.is_active ? 'text-sky-400' : 'text-gray-500'}`}>
                 {config.is_active ? 'ACTIVO' : 'PAUSADO'}
               </span>
             </div>
@@ -117,12 +117,12 @@ export default function SettingsPage() {
 
           <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">System Prompt (Instrucción Base)</label>
+              <label className="block text-sm font-medium text-gray-400 mb-2">System Prompt (InstrucciÃ³n Base)</label>
               <textarea
                 value={config.system_prompt}
                 onChange={(e) => setConfig({...config, system_prompt: e.target.value})}
                 rows={4}
-                className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"
+                className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all resize-none"
                 placeholder="Eres un asistente amigable especializado en ventas de cruceros..."
               />
             </div>
@@ -134,7 +134,7 @@ export default function SettingsPage() {
                   type="text"
                   value={config.model}
                   onChange={(e) => setConfig({...config, model: e.target.value})}
-                  className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-indigo-500 transition-all"
+                  className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-sky-500 transition-all"
                 />
               </div>
               <div>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
                   step="0.1"
                   value={config.temperature}
                   onChange={(e) => setConfig({...config, temperature: parseFloat(e.target.value)})}
-                  className="w-full mt-3 accent-indigo-500"
+                  className="w-full mt-3 accent-sky-500"
                 />
                 <p className="text-xs text-gray-500 mt-1">0 = Preciso y literal. 1 = Creativo y variado.</p>
               </div>
@@ -161,7 +161,7 @@ export default function SettingsPage() {
               <Link2 className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
-              <h3 className="text-lg md:text-xl font-semibold text-white">Conexión con Meta Webhooks</h3>
+              <h3 className="text-lg md:text-xl font-semibold text-white">ConexiÃ³n con Meta Webhooks</h3>
               <p className="text-gray-400 text-xs md:text-sm">Claves para enlazar con Instagram / Messenger</p>
             </div>
           </div>
@@ -197,7 +197,7 @@ export default function SettingsPage() {
               </div>
               <p className="mt-2 text-xs text-gray-500 flex items-center">
                 <ShieldCheck className="w-3 h-3 mr-1" />
-                Invéntalo tú y cópialo exactamente igual en la configuración del Webhook en Meta.
+                InvÃ©ntalo tÃº y cÃ³pialo exactamente igual en la configuraciÃ³n del Webhook en Meta.
               </p>
             </div>
           </div>
@@ -207,3 +207,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+
