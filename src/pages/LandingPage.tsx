@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Bot, ArrowRight, Zap, Shield, BarChart3, MessageSquare, Code, CheckCircle2 } from 'lucide-react';
+import { Bot, ArrowRight, Zap, Shield, BarChart3, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function LandingPage() {
