@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useChatContext } from '../context/ChatContext';
 
 export default function NotificationCenter() {
-  const { customers, pendingCount } = useChatContext();
+  const { customers } = useChatContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
