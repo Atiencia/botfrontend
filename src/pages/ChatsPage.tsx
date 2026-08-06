@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2 } from 'lucide-react';
+import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useChatContext } from '../context/ChatContext';
 import { supabase } from '../lib/supabase';
+import toast from 'react-hot-toast';
 
 interface ChatMessage {
   id: string;
@@ -13,60 +15,24 @@ interface ChatMessage {
   timestamp: string;
 }
 
-interface Customer {
-  id: string;
-  instagram_user_id: string;
-  is_bot_active: boolean;
-  updated_at: string;
-}
-
 const API_CHATS = `${import.meta.env.VITE_API_URL}/chats`;
 const API_CUSTOMERS = `${import.meta.env.VITE_API_URL}/customers`;
 
 export default function ChatsPage() {
   const { session } = useAuth();
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [isCustomersLoading, setIsCustomersLoading] = useState(true);
+  const { customers, isCustomersLoading, fetchCustomers } = useChatContext();
   const [chats, setChats] = useState<ChatMessage[]>([]);
   const [isChatsLoading, setIsChatsLoading] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   
   // Nuevo estado para el chat manual
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Referencia para comparar cambios y lanzar notificaciones
-  const prevCustomersRef = useRef<Customer[]>([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const clienteFromUrl = searchParams.get('cliente');
-
-  // Pedir permiso de notificaciones al cargar
-  useEffect(() => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!session?.access_token) return;
-
-    fetchCustomers(true); // Pasar true para la carga inicial
-    
-    // Escuchar cambios en la tabla customers (cuando se pausa/reanuda el bot)
-    const customersChannel = supabase
-      .channel('customers_realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'customers' }, () => {
-        fetchCustomers(false); // Falso en realtime para no parpadear
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(customersChannel);
-    };
-  }, [session]);
 
   // Si hay un cliente en la URL y ya cargaron los clientes, autoseleccionarlo
   useEffect(() => {
@@ -106,37 +72,6 @@ export default function ChatsPage() {
     }
   }, [chats]);
 
-  const fetchCustomers = async (showLoading = false) => {
-    try {
-      if (showLoading) setIsCustomersLoading(true);
-      const res = await axios.get(API_CUSTOMERS, {
-        headers: { Authorization: `Bearer ${session?.access_token}` }
-      });
-      const newCustomers: Customer[] = res.data;
-      
-      // Lógica de notificaciones de Handoff
-      if (prevCustomersRef.current.length > 0 && 'Notification' in window && Notification.permission === 'granted') {
-        newCustomers.forEach(newCust => {
-          const oldCust = prevCustomersRef.current.find(c => c.id === newCust.id);
-          // Si antes el bot estaba activo y ahora no lo está (alguien o el bot lo pausó)
-          if (oldCust && oldCust.is_bot_active && !newCust.is_bot_active) {
-            new Notification('¡Necesito Ayuda!', {
-              body: `El cliente ${newCust.instagram_user_id} necesita intervención humana.`,
-              icon: '/favicon.svg'
-            });
-          }
-        });
-      }
-      
-      prevCustomersRef.current = newCustomers;
-      setCustomers(newCustomers);
-    } catch (error) {
-      console.error('Error fetching customers', error);
-    } finally {
-      if (showLoading) setIsCustomersLoading(false);
-    }
-  };
-
   const fetchChats = async (instagramUserId: string, showLoading = false) => {
     try {
       if (showLoading) setIsChatsLoading(true);
@@ -157,19 +92,23 @@ export default function ChatsPage() {
     }
   };
 
-  const toggleBot = async (customer: Customer) => {
+  const toggleBot = async (customer: any) => {
     try {
       const res = await axios.post(
         `${API_CUSTOMERS}/${customer.instagram_user_id}/toggle`,
         { is_bot_active: !customer.is_bot_active },
         { headers: { Authorization: `Bearer ${session?.access_token}` } }
       );
-      setCustomers(customers.map(c => c.instagram_user_id === customer.instagram_user_id ? res.data : c));
+      // Forzar recarga global rápida de clientes para que todos los componentes se enteren
+      fetchCustomers(false);
+      
       if (selectedCustomer?.instagram_user_id === customer.instagram_user_id) {
         setSelectedCustomer(res.data);
       }
+      toast.success(res.data.is_bot_active ? 'Bot reanudado' : 'Bot pausado (Handoff activo)');
     } catch (error) {
       console.error('Error toggling bot status', error);
+      toast.error('Error al cambiar el estado del bot');
     }
   };
 
@@ -192,7 +131,10 @@ export default function ChatsPage() {
     } catch (error: any) {
       console.error('Error sending message', error);
       const errorMsg = error.response?.data?.error || 'Error desconocido';
-      alert(`Error de Meta API: ${errorMsg}\n\nSi estás probando desde el "Simulador", esto es normal porque no se pueden enviar mensajes de Facebook a un usuario simulado/falso.`);
+      toast.error(
+        `Error de Meta API: ${errorMsg}. Si usas el Simulador, no puedes enviar mensajes reales.`,
+        { duration: 5000 }
+      );
     } finally {
       setSending(false);
     }
@@ -211,7 +153,7 @@ export default function ChatsPage() {
 
       <div className="flex-1 flex gap-6 overflow-hidden">
         {/* Sidebar Clientes */}
-        <div className="w-1/3 glass rounded-2xl border border-gray-800 flex flex-col overflow-hidden">
+        <div className={`w-full md:w-1/3 glass rounded-2xl border border-gray-800 flex-col overflow-hidden ${selectedCustomer ? 'hidden md:flex' : 'flex'}`}>
           <div className="p-4 border-b border-gray-800">
             <div className="relative">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
@@ -262,18 +204,24 @@ export default function ChatsPage() {
         </div>
 
         {/* Chat Area */}
-        <div className="w-2/3 glass rounded-2xl border border-gray-800 flex flex-col overflow-hidden relative">
+        <div className={`w-full md:w-2/3 glass rounded-2xl border border-gray-800 flex-col overflow-hidden relative ${!selectedCustomer ? 'hidden md:flex' : 'flex'}`}>
           {selectedCustomer ? (
             <>
               {/* Header */}
               <div className="p-4 border-b border-gray-800 flex items-center justify-between bg-gray-900/20 shrink-0">
                 <div className="flex items-center gap-3">
+                  <button 
+                    onClick={() => setSelectedCustomer(null)}
+                    className="md:hidden p-2 -ml-2 text-gray-400 hover:text-white"
+                  >
+                    <ArrowLeft className="w-5 h-5" />
+                  </button>
                   <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
                     <User className="w-5 h-5 text-gray-300" />
                   </div>
                   <div>
                     <div className="font-medium text-gray-200">Cliente: {selectedCustomer.instagram_user_id}</div>
-                    <div className="text-xs text-gray-500">Última act: {new Date(selectedCustomer.updated_at).toLocaleTimeString()}</div>
+                    <div className="text-xs text-gray-500 hidden sm:block">Última act: {new Date(selectedCustomer.updated_at).toLocaleTimeString()}</div>
                   </div>
                 </div>
                 <button 

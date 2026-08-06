@@ -1,56 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Bell } from 'lucide-react';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-
-import { supabase } from '../lib/supabase';
-
-const API_CUSTOMERS = `${import.meta.env.VITE_API_URL}/customers`;
-
-interface Customer {
-  id: string;
-  instagram_user_id: string;
-  is_bot_active: boolean;
-}
+import { useChatContext } from '../context/ChatContext';
 
 export default function NotificationCenter() {
-  const { session } = useAuth();
-  const [pendingChats, setPendingChats] = useState<Customer[]>([]);
+  const { customers, pendingCount } = useChatContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!session?.access_token) return;
-
-    const fetchPending = async () => {
-      try {
-        const res = await axios.get(API_CUSTOMERS, {
-          headers: { Authorization: `Bearer ${session.access_token}` }
-        });
-        const pending = res.data.filter((c: Customer) => !c.is_bot_active);
-        setPendingChats(pending);
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-
-    // Carga inicial
-    fetchPending();
-
-    // Suscripción a Tiempo Real usando Supabase
-    const channel = supabase
-      .channel('notification_center_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'customers' }, () => {
-        // Refrescar al instante ante cualquier cambio
-        fetchPending();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [session]);
+  // Obtener los clientes que requieren ayuda
+  const pendingChats = customers.filter(c => !c.is_bot_active);
 
   // Cerrar al clickear afuera
   useEffect(() => {
@@ -59,8 +18,8 @@ export default function NotificationCenter() {
         setIsOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (

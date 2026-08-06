@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, Save, X, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 interface KnowledgeItem {
   id: string;
@@ -64,13 +65,16 @@ export default function KnowledgePage() {
     try {
       if (editingId) {
         await axios.put(`${API_URL}/${editingId}`, formData, getHeaders());
+        toast.success('Conocimiento actualizado correctamente');
       } else {
         await axios.post(API_URL, formData, getHeaders());
+        toast.success('Conocimiento creado exitosamente');
       }
       fetchKnowledge();
       closeModal();
     } catch (error) {
       console.error('Error saving knowledge', error);
+      toast.error('Ocurrió un error al guardar');
     }
   };
 
@@ -78,9 +82,11 @@ export default function KnowledgePage() {
     if (!window.confirm('¿Seguro que deseas eliminar este conocimiento?')) return;
     try {
       await axios.delete(`${API_URL}/${id}`, getHeaders());
+      toast.success('Conocimiento eliminado');
       fetchKnowledge();
     } catch (error) {
       console.error('Error deleting knowledge', error);
+      toast.error('No se pudo eliminar el conocimiento');
     }
   };
 
