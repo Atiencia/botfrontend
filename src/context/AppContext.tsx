@@ -155,14 +155,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  useEffect(() => {
-    if (!session?.access_token) return;
+  const initialLoadDone = useRef(false);
 
-    // Initial Load of EVERYTHING
-    fetchCustomers(true);
-    fetchKnowledge(true);
-    fetchAnalytics(true);
-    fetchConfig(true);
+  useEffect(() => {
+    if (!session?.access_token) {
+      initialLoadDone.current = false;
+      return;
+    }
+
+    const isFirstLoad = !initialLoadDone.current;
+
+    // Initial Load of EVERYTHING (o background sync si ya cargó)
+    fetchCustomers(isFirstLoad);
+    fetchKnowledge(isFirstLoad);
+    fetchAnalytics(isFirstLoad);
+    fetchConfig(isFirstLoad);
+    
+    initialLoadDone.current = true;
     
     // Realtime subscription for customers
     const customersChannel = supabase
