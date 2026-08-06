@@ -22,10 +22,10 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
   const { user } = useAuth();
   
   const navItems = [
-    { path: '/dashboard', label: 'MÃ©tricas', icon: <Activity className="w-5 h-5" /> },
+    { path: '/dashboard', label: 'Métricas', icon: <Activity className="w-5 h-5" /> },
     { path: '/', label: 'Conocimiento', icon: <BookOpen className="w-5 h-5" /> },
     { path: '/chats', label: 'Conversaciones', icon: <MessageSquare className="w-5 h-5" /> },
-    { path: '/settings', label: 'ConfiguraciÃ³n', icon: <Settings className="w-5 h-5" /> },
+    { path: '/settings', label: 'Configuración', icon: <Settings className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => {
@@ -35,7 +35,7 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
 
   return (
     <>
-      {/* Overlay para mÃ³viles */}
+      {/* Overlay para móviles */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-20 md:hidden backdrop-blur-sm"
@@ -88,7 +88,7 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
         
         <div className="p-4 border-t border-gray-800 space-y-4">
           <div className="px-4 py-2 bg-gray-900 rounded-lg border border-gray-800">
-            <p className="text-xs text-gray-500 mb-1">SesiÃ³n iniciada como</p>
+            <p className="text-xs text-gray-500 mb-1">Sesión iniciada como</p>
             <p className="text-sm font-medium text-gray-300 truncate">{user?.email}</p>
           </div>
           
@@ -97,7 +97,7 @@ function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
             className="w-full flex items-center justify-center space-x-2 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-lg transition-colors border border-transparent hover:border-red-500/20"
           >
             <LogOut className="w-4 h-4" />
-            <span>Cerrar SesiÃ³n</span>
+            <span>Cerrar Sesión</span>
           </button>
         </div>
       </aside>
@@ -117,7 +117,7 @@ function DashboardLayout() {
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       
       <main className="flex-1 h-screen overflow-hidden flex flex-col z-10 relative">
-        {/* Barra superior mÃ³vil */}
+        {/* Barra superior móvil */}
         <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-800 bg-gray-950/80 backdrop-blur-md">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center">
@@ -187,4 +187,5 @@ export default function App() {
     </AuthProvider>
   );
 }
+
 

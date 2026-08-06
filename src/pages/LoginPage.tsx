@@ -36,7 +36,7 @@ export default function LoginPage() {
         navigate('/');
       }
     } catch (err: any) {
-      setError(err.message || 'OcurriÃ³ un error inesperado');
+      setError(err.message || 'Ocurrió un error inesperado');
     } finally {
       setLoading(false);
     }
@@ -87,7 +87,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider ml-1">ContraseÃ±a</label>
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider ml-1">Contraseña</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-gray-500" />
@@ -112,7 +112,7 @@ export default function LoginPage() {
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  <span>{isLogin ? 'Iniciar SesiÃ³n' : 'Crear Cuenta'}</span>
+                  <span>{isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}</span>
                   <ArrowRight className="w-4 h-4 ml-2 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                 </>
               )}
@@ -124,7 +124,7 @@ export default function LoginPage() {
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-gray-400 hover:text-white transition-colors focus:outline-none"
             >
-              {isLogin ? 'Â¿No tienes cuenta? RegÃ­strate' : 'Â¿Ya tienes cuenta? Inicia sesiÃ³n'}
+              {isLogin ? 'Â¿No tienes cuenta? Regístrate' : 'Â¿Ya tienes cuenta? Inicia sesión'}
             </button>
           </div>
 
@@ -135,7 +135,7 @@ export default function LoginPage() {
             <div className="flex-1 border-t border-gray-800"></div>
           </div>
 
-          {/* BotÃ³n Demo */}
+          {/* Botón Demo */}
           <button
             onClick={() => navigate('/demo')}
             className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl text-sky-300 bg-sky-500/10 border border-sky-500/20 hover:bg-sky-500/20 hover:text-white transition-all group"
@@ -150,4 +150,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
 

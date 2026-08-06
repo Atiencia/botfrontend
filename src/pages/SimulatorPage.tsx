@@ -13,7 +13,7 @@ interface Message {
 
 export default function SimulatorPage() {
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', role: 'assistant', content: 'Â¡Hola! Soy Eli, la asistente virtual. Â¿En quÃ© te puedo ayudar hoy?' }
+    { id: '1', role: 'assistant', content: '¡Hola! Soy Eli, la asistente virtual. ¿En qué te puedo ayudar hoy?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +36,7 @@ export default function SimulatorPage() {
     setIsLoading(true);
 
     try {
-      const chatHistory = messages.map(m => ({ role: m.role, content: m.content })).slice(-10); // Mandar los Ãºltimos 10
+      const chatHistory = messages.map(m => ({ role: m.role, content: m.content })).slice(-10); // Mandar los últimos 10
       const res = await axios.post(API_URL, {
         message: userMessage.content,
         chatHistory
@@ -46,7 +46,7 @@ export default function SimulatorPage() {
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Error simulating chat:', error);
-      const errorMessage = { id: (Date.now() + 1).toString(), role: 'assistant' as const, content: 'Lo siento, hubo un error de conexiÃ³n con mi servidor.' };
+      const errorMessage = { id: (Date.now() + 1).toString(), role: 'assistant' as const, content: 'Lo siento, hubo un error de conexión con mi servidor.' };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -72,7 +72,7 @@ export default function SimulatorPage() {
           <div>
             <h3 className="font-bold text-white leading-tight">Eli (Demo Bot)</h3>
             <span className="text-xs text-emerald-400 flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> En lÃ­nea
+              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> En línea
             </span>
           </div>
         </div>
@@ -141,4 +141,5 @@ export default function SimulatorPage() {
     </div>
   );
 }
+
 

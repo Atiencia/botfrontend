@@ -23,7 +23,7 @@ export default function KnowledgePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   
-  // Estado para modal de confirmaciÃ³n
+  // Estado para modal de confirmación
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({ category: '', content: '' });
@@ -62,7 +62,7 @@ export default function KnowledgePage() {
       closeModal();
     } catch (error) {
       console.error('Error saving knowledge', error);
-      toast.error('OcurriÃ³ un error al guardar');
+      toast.error('Ocurrió un error al guardar');
     }
   };
 
@@ -88,7 +88,7 @@ export default function KnowledgePage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Base de Conocimiento</h2>
-          <p className="text-gray-400 text-sm md:text-base">Administra la informaciÃ³n que Eli utilizarÃ¡ para responder.</p>
+          <p className="text-gray-400 text-sm md:text-base">Administra la información que Eli utilizará para responder.</p>
         </div>
         <button
           onClick={() => openModal()}
@@ -106,7 +106,7 @@ export default function KnowledgePage() {
           </div>
         ) : items.length === 0 ? (
           <div className="col-span-full text-center py-20 text-gray-500 glass rounded-2xl border-dashed">
-            No hay informaciÃ³n en la base de conocimiento. Agrega algo para que Eli pueda aprender.
+            No hay información en la base de conocimiento. Agrega algo para que Eli pueda aprender.
           </div>
         ) : (
           items.map((item) => (
@@ -150,7 +150,7 @@ export default function KnowledgePage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">CategorÃ­a</label>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Categoría</label>
                 <input
                   type="text"
                   required
@@ -162,13 +162,13 @@ export default function KnowledgePage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Contenido / InformaciÃ³n</label>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Contenido / Información</label>
                 <textarea
                   required
                   rows={8}
                   value={formData.content}
                   onChange={e => setFormData({ ...formData, content: e.target.value })}
-                  placeholder="Escribe aquÃ­ toda la informaciÃ³n detallada que Eli debe saber sobre este tema..."
+                  placeholder="Escribe aquí toda la información detallada que Eli debe saber sobre este tema..."
                   className="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all resize-none"
                 />
               </div>
@@ -194,15 +194,16 @@ export default function KnowledgePage() {
         </div>
       )}
 
-      {/* Modal de ConfirmaciÃ³n para Eliminar */}
+      {/* Modal de Confirmación para Eliminar */}
       <ConfirmModal 
         isOpen={!!itemToDelete}
         title="Eliminar Conocimiento"
-        message="Â¿EstÃ¡s seguro que deseas eliminar esta informaciÃ³n? Eli ya no podrÃ¡ usarla para responder."
+        message="Â¿Estás seguro que deseas eliminar esta información? Eli ya no podrá usarla para responder."
         onConfirm={performDelete}
         onCancel={() => setItemToDelete(null)}
       />
     </div>
   );
 }
+
 

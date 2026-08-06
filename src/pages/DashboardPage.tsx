@@ -26,7 +26,7 @@ export default function DashboardPage() {
   return (
     <div className="p-8 max-w-6xl mx-auto h-screen flex flex-col">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">MÃ©tricas de Rendimiento</h2>
+        <h2 className="text-3xl font-bold text-white mb-2">Métricas de Rendimiento</h2>
         <p className="text-gray-400">Analiza el volumen de conversaciones y el ahorro de tiempo gracias a tu bot.</p>
       </div>
 
@@ -72,7 +72,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="flex-1 glass rounded-2xl border border-gray-800 p-6 flex flex-col">
-        <h3 className="text-xl font-semibold text-white mb-6">Actividad de los Ãºltimos 7 dÃ­as</h3>
+        <h3 className="text-xl font-semibold text-white mb-6">Actividad de los últimos 7 días</h3>
         <div className="flex-1 min-h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -96,4 +96,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
 

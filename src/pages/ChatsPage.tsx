@@ -40,7 +40,7 @@ export default function ChatsPage() {
       const customerToSelect = customers.find(c => c.instagram_user_id === clienteFromUrl);
       if (customerToSelect && (!selectedCustomer || selectedCustomer.id !== customerToSelect.id)) {
         setSelectedCustomer(customerToSelect);
-        // Limpiamos la URL para no forzar la selecciÃ³n infinitamente si cambian de chat
+        // Limpiamos la URL para no forzar la selección infinitamente si cambian de chat
         searchParams.delete('cliente');
         setSearchParams(searchParams, { replace: true });
       }
@@ -99,7 +99,7 @@ export default function ChatsPage() {
         { is_bot_active: !customer.is_bot_active },
         { headers: { Authorization: `Bearer ${session?.access_token}` } }
       );
-      // Forzar recarga global rÃ¡pida de clientes para que todos los componentes se enteren
+      // Forzar recarga global rápida de clientes para que todos los componentes se enteren
       fetchCustomers(false);
       
       if (selectedCustomer?.instagram_user_id === customer.instagram_user_id) {
@@ -126,7 +126,7 @@ export default function ChatsPage() {
       });
       
       setNewMessage('');
-      // Refrescar chats inmediatamente despuÃ©s de enviar
+      // Refrescar chats inmediatamente después de enviar
       fetchChats(selectedCustomer.instagram_user_id);
     } catch (error: any) {
       console.error('Error sending message', error);
@@ -248,7 +248,7 @@ export default function ChatsPage() {
                   </div>
                 ) : chats.length === 0 ? (
                   <div className="h-full flex items-center justify-center text-gray-500 text-sm">
-                    No hay mensajes en esta conversaciÃ³n.
+                    No hay mensajes en esta conversación.
                   </div>
                 ) : (
                   [...chats].reverse().map((msg) => {
@@ -318,7 +318,7 @@ export default function ChatsPage() {
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500 flex-col gap-4">
               <Bot className="w-12 h-12 text-gray-700" />
-              <p>Selecciona una conversaciÃ³n para ver los mensajes</p>
+              <p>Selecciona una conversación para ver los mensajes</p>
             </div>
           )}
         </div>
@@ -326,4 +326,5 @@ export default function ChatsPage() {
     </div>
   );
 }
+
 

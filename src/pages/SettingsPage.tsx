@@ -15,7 +15,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   
-  // Estado local para ediciÃ³n, inicializado con la cachÃ© global
+  // Estado local para edición, inicializado con la caché global
   const [config, setConfig] = useState({
     system_prompt: '',
     model: 'llama-3.1-8b-instant',
@@ -25,7 +25,7 @@ export default function SettingsPage() {
     is_active: true
   });
 
-  // Cuando la cachÃ© global carga, actualizamos el estado local de ediciÃ³n
+  // Cuando la caché global carga, actualizamos el estado local de edición
   useEffect(() => {
     if (globalConfig) {
       setConfig(globalConfig);
@@ -42,12 +42,12 @@ export default function SettingsPage() {
       setSuccess(false);
       await axios.post(API_URL, config, getHeaders());
       setSuccess(true);
-      toast.success('ConfiguraciÃ³n guardada exitosamente');
-      fetchConfig(false); // Refresca cachÃ© global silenciosamente
+      toast.success('Configuración guardada exitosamente');
+      fetchConfig(false); // Refresca caché global silenciosamente
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
       console.error('Error saving config', error);
-      toast.error('Error al guardar la configuraciÃ³n');
+      toast.error('Error al guardar la configuración');
     } finally {
       setSaving(false);
     }
@@ -65,8 +65,8 @@ export default function SettingsPage() {
     <div className="p-4 md:p-8 max-w-4xl mx-auto pb-24">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">ConfiguraciÃ³n</h2>
-          <p className="text-gray-400 text-sm md:text-base">Personaliza a Eli y conÃ©ctalo con tu pÃ¡gina de Meta.</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Configuración</h2>
+          <p className="text-gray-400 text-sm md:text-base">Personaliza a Eli y conéctalo con tu página de Meta.</p>
         </div>
         <button
           onClick={handleSave}
@@ -81,7 +81,7 @@ export default function SettingsPage() {
       {success && (
         <div className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 flex items-center space-x-2 animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="w-5 h-5" />
-          <span>ConfiguraciÃ³n guardada exitosamente.</span>
+          <span>Configuración guardada exitosamente.</span>
         </div>
       )}
 
@@ -117,7 +117,7 @@ export default function SettingsPage() {
 
           <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">System Prompt (InstrucciÃ³n Base)</label>
+              <label className="block text-sm font-medium text-gray-400 mb-2">System Prompt (Instrucción Base)</label>
               <textarea
                 value={config.system_prompt}
                 onChange={(e) => setConfig({...config, system_prompt: e.target.value})}
@@ -161,7 +161,7 @@ export default function SettingsPage() {
               <Link2 className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
-              <h3 className="text-lg md:text-xl font-semibold text-white">ConexiÃ³n con Meta Webhooks</h3>
+              <h3 className="text-lg md:text-xl font-semibold text-white">Conexión con Meta Webhooks</h3>
               <p className="text-gray-400 text-xs md:text-sm">Claves para enlazar con Instagram / Messenger</p>
             </div>
           </div>
@@ -197,7 +197,7 @@ export default function SettingsPage() {
               </div>
               <p className="mt-2 text-xs text-gray-500 flex items-center">
                 <ShieldCheck className="w-3 h-3 mr-1" />
-                InvÃ©ntalo tÃº y cÃ³pialo exactamente igual en la configuraciÃ³n del Webhook en Meta.
+                Invéntalo tú y cópialo exactamente igual en la configuración del Webhook en Meta.
               </p>
             </div>
           </div>
@@ -207,4 +207,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
 
