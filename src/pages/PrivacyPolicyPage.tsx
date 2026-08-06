@@ -71,7 +71,7 @@ export default function PrivacyPolicyPage() {
 
             <section className="pt-6 border-t border-gray-800">
               <p className="text-sm text-gray-500">
-                Ãšltima actualización: {new Date().toLocaleDateString('es-ES')}
+                Última actualización: {new Date().toLocaleDateString('es-ES')}
                 <br />
                 Si tienes dudas sobre cómo procesamos los datos, puedes contactarnos a través del administrador del sistema.
               </p>
@@ -83,5 +83,6 @@ export default function PrivacyPolicyPage() {
     </div>
   );
 }
+
 
 

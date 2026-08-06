@@ -198,12 +198,13 @@ export default function KnowledgePage() {
       <ConfirmModal 
         isOpen={!!itemToDelete}
         title="Eliminar Conocimiento"
-        message="Â¿Estás seguro que deseas eliminar esta información? Eli ya no podrá usarla para responder."
+        message="¿Estás seguro que deseas eliminar esta información? Eli ya no podrá usarla para responder."
         onConfirm={performDelete}
         onCancel={() => setItemToDelete(null)}
       />
     </div>
   );
 }
+
 
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2, ArrowLeft, Image as ImageIcon } from 'lucide-react';
@@ -289,7 +289,7 @@ export default function ChatsPage() {
                   </div>
                   <div>
                     <div className="font-medium text-gray-200">Cliente: {selectedCustomer.instagram_user_id}</div>
-                    <div className="text-xs text-gray-500 hidden sm:block">Ãšltima act: {new Date(selectedCustomer.updated_at).toLocaleTimeString()}</div>
+                    <div className="text-xs text-gray-500 hidden sm:block">Última act: {new Date(selectedCustomer.updated_at).toLocaleTimeString()}</div>
                   </div>
                 </div>
                 <button 
@@ -338,7 +338,7 @@ export default function ChatsPage() {
                           <div className={`flex flex-col ${isBot ? 'items-end' : 'items-start'}`}>
                             <div className="text-xs text-gray-500 mb-1 px-1 flex items-center space-x-2">
                               <span>{isBot ? 'Eli' : `Cliente`}</span>
-                              <span>â€¢</span>
+                              <span>•</span>
                               <span>{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                             </div>
                             <div className={`px-4 py-3 rounded-2xl whitespace-pre-wrap text-sm shadow-sm ${
@@ -409,5 +409,6 @@ export default function ChatsPage() {
     </div>
   );
 }
+
 
 

@@ -97,7 +97,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-11 pr-4 py-3 bg-gray-950/50 border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500/50 transition-all"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="••••••••"
                   required
                 />
               </div>
@@ -124,7 +124,7 @@ export default function LoginPage() {
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-gray-400 hover:text-white transition-colors focus:outline-none"
             >
-              {isLogin ? 'Â¿No tienes cuenta? Regístrate' : 'Â¿Ya tienes cuenta? Inicia sesión'}
+              {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
             </button>
           </div>
 
@@ -150,5 +150,6 @@ export default function LoginPage() {
     </div>
   );
 }
+
 
 
