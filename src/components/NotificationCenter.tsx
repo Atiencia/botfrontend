@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
+import { supabase } from '../lib/supabase';
+
 const API_CUSTOMERS = `${import.meta.env.VITE_API_URL}/customers`;
 
 interface Customer {
@@ -33,9 +35,21 @@ export default function NotificationCenter() {
       }
     };
 
+    // Carga inicial
     fetchPending();
-    const interval = setInterval(fetchPending, 15000); // Polling cada 15 seg
-    return () => clearInterval(interval);
+
+    // Suscripción a Tiempo Real usando Supabase
+    const channel = supabase
+      .channel('notification_center_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'customers' }, (payload) => {
+        // Refrescar al instante ante cualquier cambio
+        fetchPending();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [session]);
 
   // Cerrar al clickear afuera

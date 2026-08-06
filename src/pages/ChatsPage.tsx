@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 
 interface ChatMessage {
   id: string;
@@ -48,12 +49,21 @@ export default function ChatsPage() {
   }, []);
 
   useEffect(() => {
-    if (session?.access_token) {
-      fetchCustomers();
-      // Reducido a 10 segundos para no asfixiar el Rate Limit (antes 5s)
-      const interval = setInterval(fetchCustomers, 10000);
-      return () => clearInterval(interval);
-    }
+    if (!session?.access_token) return;
+
+    fetchCustomers();
+    
+    // Escuchar cambios en la tabla customers (cuando se pausa/reanuda el bot)
+    const customersChannel = supabase
+      .channel('customers_realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'customers' }, () => {
+        fetchCustomers();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(customersChannel);
+    };
   }, [session]);
 
   // Si hay un cliente en la URL y ya cargaron los clientes, autoseleccionarlo
@@ -70,12 +80,21 @@ export default function ChatsPage() {
   }, [clienteFromUrl, customers, selectedCustomer, searchParams, setSearchParams]);
 
   useEffect(() => {
-    if (session?.access_token && selectedCustomer) {
-      fetchChats(selectedCustomer.instagram_user_id);
-      // Reducido a 5 segundos (antes 3s)
-      const interval = setInterval(() => fetchChats(selectedCustomer.instagram_user_id), 5000);
-      return () => clearInterval(interval);
-    }
+    if (!session?.access_token || !selectedCustomer) return;
+
+    fetchChats(selectedCustomer.instagram_user_id);
+
+    // Escuchar nuevos mensajes en el chat actual
+    const chatsChannel = supabase
+      .channel('chats_realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'chats' }, () => {
+        fetchChats(selectedCustomer.instagram_user_id);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(chatsChannel);
+    };
   }, [session, selectedCustomer]);
 
   // Auto-scroll cuando hay nuevos mensajes
