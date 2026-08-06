@@ -13,33 +13,40 @@ export default function ConfirmModal({ isOpen, title, message, onConfirm, onCanc
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="glass bg-gray-900/90 w-full max-w-sm rounded-2xl border border-gray-700 shadow-2xl p-6 animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 shrink-0">
-              <AlertTriangle className="w-5 h-5" />
-            </div>
-            <h3 className="text-lg font-bold text-white">{title}</h3>
-          </div>
-          <button onClick={onCancel} className="text-gray-400 hover:text-white transition-colors">
-            <X className="w-5 h-5" />
-          </button>
+      <div className="glass bg-gray-900/95 w-full max-w-sm rounded-3xl border border-gray-700 shadow-2xl p-6 md:p-8 animate-in fade-in zoom-in-95 duration-200 relative flex flex-col items-center text-center">
+        
+        {/* Botón Cerrar (Esquina) */}
+        <button 
+          onClick={onCancel} 
+          className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors bg-gray-800/50 hover:bg-gray-700 rounded-full p-1.5"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        {/* Icono Principal (Centrado Arriba) */}
+        <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-400 mb-4 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+          <AlertTriangle className="w-8 h-8" />
         </div>
         
-        <p className="text-gray-300 text-sm mb-6 pl-13">
+        {/* Título */}
+        <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+        
+        {/* Mensaje */}
+        <p className="text-gray-400 text-sm mb-8 leading-relaxed">
           {message}
         </p>
         
-        <div className="flex justify-end space-x-3">
+        {/* Botones */}
+        <div className="flex justify-center space-x-3 w-full">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+            className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors"
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition-all duration-300 shadow-lg shadow-red-600/30 font-medium text-sm"
+            className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-red-600/30 font-medium text-sm"
           >
             Aceptar
           </button>
