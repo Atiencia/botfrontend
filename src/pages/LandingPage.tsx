@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Bot, ArrowRight, Zap, Shield, BarChart3, MessageSquare, Clock, CheckCircle2, Users, Sparkles, Globe, ChevronRight } from 'lucide-react';
+import { Bot, ArrowRight, Zap, Shield, BarChart3, Clock, Users, Sparkles, Globe, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function LandingPage() {
@@ -80,59 +80,7 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* How it works Section */}
-      <section className="relative z-10 py-32 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20 anim-fade-in-up">
-            <span className="inline-block text-sky-400 text-sm font-semibold uppercase tracking-widest mb-4">Así funciona</span>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              De cero a conversiones<br className="hidden md:block"/> en tres pasos
-            </h2>
-            <p className="text-gray-400 max-w-xl mx-auto text-lg">
-              Configura tu bot en minutos y deja que la inteligencia artificial haga el trabajo pesado.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {[
-              {
-                step: "01",
-                icon: <MessageSquare className="w-6 h-6" />,
-                title: "Conecta tu Instagram",
-                description: "Vincula tu cuenta de Meta en segundos. Eli comienza a escuchar los mensajes directos de tus clientes automáticamente.",
-                color: "sky"
-              },
-              {
-                step: "02",
-                icon: <Sparkles className="w-6 h-6" />,
-                title: "Entrena a la IA",
-                description: "Agrega información sobre tus productos, precios y políticas. El bot usa búsqueda semántica para dar respuestas precisas.",
-                color: "blue"
-              },
-              {
-                step: "03",
-                icon: <BarChart3 className="w-6 h-6" />,
-                title: "Supervisa y escala",
-                description: "Monitorea las métricas en tiempo real. Si la IA necesita ayuda, se pausa en silencio y tú tomas el control.",
-                color: "indigo"
-              }
-            ].map((item, idx) => (
-              <div key={idx} className="group relative anim-fade-in-up" style={{ animationDelay: `${idx * 150}ms` }}>
-                <div className="relative bg-gray-900/40 backdrop-blur-sm border border-white/5 hover:border-white/10 p-8 rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-sky-500/5">
-                  <div className="absolute -top-4 -left-2 text-6xl font-black text-white/[0.03] select-none pointer-events-none">{item.step}</div>
-                  <div className={`w-12 h-12 rounded-2xl bg-${item.color}-500/10 border border-${item.color}-500/20 flex items-center justify-center mb-6 text-${item.color}-400 group-hover:scale-110 transition-transform duration-300`}>
-                    {item.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                  <p className="text-gray-400 leading-relaxed text-[15px]">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
       {/* Features Grid */}
       <section className="relative z-10 py-32 border-t border-white/5 bg-gradient-to-b from-gray-950 to-gray-950/80">
@@ -165,23 +113,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Tech Stack Banner */}
-      <section className="relative z-10 py-20 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-gradient-to-br from-gray-900/80 to-gray-900/40 border border-white/5 rounded-3xl p-10 md:p-16 text-center backdrop-blur-sm anim-fade-in-up">
-            <h3 className="text-2xl md:text-3xl font-bold mb-6">Construido con tecnología de clase mundial</h3>
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-gray-500 text-sm font-medium">
-              {['React', 'TypeScript', 'Node.js', 'Supabase', 'pgvector', 'Groq', 'Tailwind CSS', 'Meta API'].map((tech, i) => (
-                <div key={i} className="flex items-center gap-2 hover:text-white transition-colors duration-300 cursor-default">
-                  <CheckCircle2 className="w-4 h-4 text-sky-500/60" />
-                  <span>{tech}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="relative z-10 py-32 border-t border-white/5">
         <div className="max-w-4xl mx-auto px-6 text-center anim-fade-in-up">
@@ -192,14 +123,14 @@ export default function LandingPage() {
             ¿Listo para automatizar<br className="hidden md:block"/> tu negocio?
           </h2>
           <p className="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-            Prueba Eli ahora mismo con nuestra demo interactiva. Sin registro, sin tarjeta de crédito.
+            Prueba Eli ahora mismo con nuestra demo interactiva. Sin registro, sin necesidad de pago.
           </p>
           <Link 
             to="/demo" 
             className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white rounded-2xl font-bold text-lg shadow-xl shadow-sky-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-sky-500/30 group"
           >
-            <span>Probar Demo en Vivo</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <span className="text-white">Probar</span>
+            <ArrowRight className="w-5 h-5 text-white" />
           </Link>
         </div>
       </section>
@@ -243,8 +174,8 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-white/5 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-gray-600 text-sm">&copy; {new Date().getFullYear()} Eli System. Todos los derechos reservados.</p>
-            <p className="text-gray-700 text-xs">Hecho con IA y café ☕</p>
+            <p className="text-gray-600 text-sm">&copy; {new Date().getFullYear()} Eli System.</p>
+            <p className="text-gray-700 text-xs">DEVELOPED BY JAVIER</p>
           </div>
         </div>
       </footer>
