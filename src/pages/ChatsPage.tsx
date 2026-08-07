@@ -1,7 +1,8 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { User, Bot, Search, PauseCircle, PlayCircle, Send, Loader2, ArrowLeft, Image as ImageIcon, MessageCircle, Phone } from 'lucide-react';
+import { Instagram } from '../components/icons/Instagram';
 import { useAuth } from '../context/AuthContext';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../lib/supabase';
@@ -9,7 +10,7 @@ import toast from 'react-hot-toast';
 
 interface ChatMessage {
   id: string;
-  instagram_user_id: string;
+  platform_user_id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
@@ -37,7 +38,7 @@ export default function ChatsPage() {
   // Si hay un cliente en la URL y ya cargaron los clientes, autoseleccionarlo
   useEffect(() => {
     if (clienteFromUrl && customers.length > 0) {
-      const customerToSelect = customers.find(c => c.instagram_user_id === clienteFromUrl);
+      const customerToSelect = customers.find(c => c.platform_user_id === clienteFromUrl);
       if (customerToSelect && (!selectedCustomer || selectedCustomer.id !== customerToSelect.id)) {
         setSelectedCustomer(customerToSelect);
         // Limpiamos la URL para no forzar la selección infinitamente si cambian de chat
@@ -50,13 +51,13 @@ export default function ChatsPage() {
   useEffect(() => {
     if (!session?.access_token || !selectedCustomer) return;
 
-    fetchChats(selectedCustomer.instagram_user_id, true); // Pasar true para la carga inicial
+    fetchChats(selectedCustomer.platform_user_id, true); // Pasar true para la carga inicial
 
     // Escuchar nuevos mensajes en el chat actual
     const chatsChannel = supabase
       .channel('chats_realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chats' }, () => {
-        fetchChats(selectedCustomer.instagram_user_id, false); // Falso en realtime
+        fetchChats(selectedCustomer.platform_user_id, false); // Falso en realtime
       })
       .subscribe();
 
@@ -72,13 +73,13 @@ export default function ChatsPage() {
     }
   }, [chats]);
 
-  const fetchChats = async (instagramUserId: string, showLoading = false) => {
+  const fetchChats = async (platformUserId: string, showLoading = false) => {
     try {
       if (showLoading) setIsChatsLoading(true);
       const res = await axios.get(API_CHATS, {
         headers: { Authorization: `Bearer ${session?.access_token}` }
       });
-      const filtered = res.data.filter((c: ChatMessage) => c.instagram_user_id === instagramUserId);
+      const filtered = res.data.filter((c: ChatMessage) => c.platform_user_id === platformUserId);
       
       // Solo actualizar si hay cambios reales para evitar re-renders innecesarios
       setChats(prev => {
@@ -95,14 +96,14 @@ export default function ChatsPage() {
   const toggleBot = async (customer: any) => {
     try {
       const res = await axios.post(
-        `${API_CUSTOMERS}/${customer.instagram_user_id}/toggle`,
+        `${API_CUSTOMERS}/${customer.platform_user_id}/toggle`,
         { is_bot_active: !customer.is_bot_active },
         { headers: { Authorization: `Bearer ${session?.access_token}` } }
       );
       // Forzar recarga global rápida de clientes para que todos los componentes se enteren
       fetchCustomers(false);
       
-      if (selectedCustomer?.instagram_user_id === customer.instagram_user_id) {
+      if (selectedCustomer?.platform_user_id === customer.platform_user_id) {
         setSelectedCustomer(res.data);
       }
       toast.success(res.data.is_bot_active ? 'Bot reanudado' : 'Bot pausado (Handoff activo)');
@@ -119,14 +120,14 @@ export default function ChatsPage() {
     setSending(true);
     try {
       await axios.post(`${API_CHATS}/send`, {
-        instagram_user_id: selectedCustomer.instagram_user_id,
+        platform_user_id: selectedCustomer.platform_user_id,
         message: newMessage.trim()
       }, {
         headers: { Authorization: `Bearer ${session.access_token}` }
       });
       
       setNewMessage('');
-      fetchChats(selectedCustomer.instagram_user_id);
+      fetchChats(selectedCustomer.platform_user_id);
     } catch (error: any) {
       console.error('Error sending message', error);
       const errorMsg = error.response?.data?.error || 'Error desconocido';
@@ -159,7 +160,7 @@ export default function ChatsPage() {
     setUploadingImage(true);
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `${selectedCustomer.instagram_user_id}_${Date.now()}.${fileExt}`;
+      const fileName = `${selectedCustomer.platform_user_id}_${Date.now()}.${fileExt}`;
       
       const { error: uploadError } = await supabase.storage
         .from('chat-images')
@@ -172,7 +173,7 @@ export default function ChatsPage() {
         .getPublicUrl(fileName);
 
       await axios.post(`${API_CHATS}/send`, {
-        instagram_user_id: selectedCustomer.instagram_user_id,
+        platform_user_id: selectedCustomer.platform_user_id,
         image_url: publicUrl,
         message: newMessage.trim()
       }, {
@@ -180,7 +181,7 @@ export default function ChatsPage() {
       });
 
       setNewMessage('');
-      fetchChats(selectedCustomer.instagram_user_id);
+      fetchChats(selectedCustomer.platform_user_id);
     } catch (error: any) {
       console.error('Error uploading image', error);
       toast.error('Error al subir la imagen. Verifica que el Bucket "chat-images" esté creado.', { duration: 5000 });
@@ -209,7 +210,7 @@ export default function ChatsPage() {
   };
 
   const filteredCustomers = customers.filter(c => 
-    c.instagram_user_id.toLowerCase().includes(searchTerm.toLowerCase())
+    c.platform_user_id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -250,11 +251,14 @@ export default function ChatsPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center shrink-0 relative">
                         <User className="w-5 h-5 text-gray-300" />
+                        {c.platform === 'instagram' && <Instagram className="w-4 h-4 absolute -bottom-1 -right-1 text-pink-500 bg-gray-900 rounded-full p-0.5" />}
+                        {c.platform === 'messenger' && <MessageCircle className="w-4 h-4 absolute -bottom-1 -right-1 text-blue-500 bg-gray-900 rounded-full p-0.5" />}
+                        {c.platform === 'whatsapp' && <Phone className="w-4 h-4 absolute -bottom-1 -right-1 text-emerald-500 bg-gray-900 rounded-full p-0.5" />}
                       </div>
                       <div>
-                        <div className="font-medium text-gray-200">Cliente: {c.instagram_user_id}</div>
+                        <div className="font-medium text-gray-200">Cliente: {c.platform_user_id}</div>
                         <div className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
                           {c.is_bot_active ? (
                             <span className="text-sky-400 flex items-center gap-1"><Bot className="w-3 h-3"/> Bot Activo</span>
@@ -288,7 +292,7 @@ export default function ChatsPage() {
                     <User className="w-5 h-5 text-gray-300" />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-200">Cliente: {selectedCustomer.instagram_user_id}</div>
+                    <div className="font-medium text-gray-200">Cliente: {selectedCustomer.platform_user_id}</div>
                     <div className="text-xs text-gray-500 hidden sm:block">Última act: {new Date(selectedCustomer.updated_at).toLocaleTimeString()}</div>
                   </div>
                 </div>

@@ -1,5 +1,5 @@
-﻿import { useState, useEffect } from 'react';
-import { Key, Bot, Save, Loader2, Link2, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Key, Bot, Save, Loader2, Link2, ShieldCheck, CheckCircle2, PhoneCall } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -22,6 +22,9 @@ export default function SettingsPage() {
     temperature: 0.7,
     meta_access_token: '',
     meta_verify_token: '',
+    whatsapp_phone_id: '',
+    whatsapp_access_token: '',
+    whatsapp_verify_token: '',
     is_active: true
   });
 
@@ -199,6 +202,60 @@ export default function SettingsPage() {
                 <ShieldCheck className="w-3 h-3 mr-1" />
                 Invéntalo tú y cópialo exactamente igual en la configuración del Webhook en Meta.
               </p>
+            </div>
+          </div>
+        </div>
+
+        {/* WhatsApp Integration Section */}
+        <div className="glass rounded-2xl p-4 md:p-8 border border-gray-800">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+              <PhoneCall className="w-5 h-5 md:w-6 md:h-6" />
+            </div>
+            <div>
+              <h3 className="text-lg md:text-xl font-semibold text-white">Integración con WhatsApp Business</h3>
+              <p className="text-gray-400 text-xs md:text-sm">Conecta tu número de WhatsApp Business API</p>
+            </div>
+          </div>
+
+          <div className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">WhatsApp Phone ID</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={config.whatsapp_phone_id || ''}
+                  onChange={(e) => setConfig({...config, whatsapp_phone_id: e.target.value})}
+                  className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-mono text-sm"
+                  placeholder="Ej. 123456789012345"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">WhatsApp Access Token</label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={config.whatsapp_access_token || ''}
+                  onChange={(e) => setConfig({...config, whatsapp_access_token: e.target.value})}
+                  className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-mono text-sm"
+                  placeholder="EAAB..."
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">WhatsApp Verify Token</label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={config.whatsapp_verify_token || ''}
+                  onChange={(e) => setConfig({...config, whatsapp_verify_token: e.target.value})}
+                  className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-mono text-sm"
+                  placeholder="ej. mi_whatsapp_secreto"
+                />
+              </div>
             </div>
           </div>
         </div>

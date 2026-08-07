@@ -5,7 +5,8 @@ import { supabase } from '../lib/supabase';
 
 interface Customer {
   id: string;
-  instagram_user_id: string;
+  platform_user_id: string;
+  platform?: 'instagram' | 'messenger' | 'whatsapp';
   is_bot_active: boolean;
   updated_at: string;
 }
@@ -44,7 +45,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
           // Si antes el bot estaba activo y ahora no lo está (alguien o el bot lo pausó)
           if (oldCust && oldCust.is_bot_active && !newCust.is_bot_active) {
             new Notification('¡Necesito Ayuda!', {
-              body: `El cliente ${newCust.instagram_user_id} necesita intervención humana.`,
+              body: `El cliente ${newCust.platform_user_id} necesita intervención humana.`,
               icon: '/favicon.svg'
             });
           }

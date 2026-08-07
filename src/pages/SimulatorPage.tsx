@@ -17,8 +17,10 @@ import {
   Plus, 
   Search, 
   MessageCircle,
-  Activity
+  Activity,
+  Phone
 } from 'lucide-react';
+import { Instagram } from '../components/icons/Instagram';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -167,7 +169,9 @@ const SimulatorPage = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-start">
-                <h4 className="text-sm font-medium text-white truncate">María García</h4>
+                <h4 className="text-sm font-medium text-white truncate flex items-center gap-1.5">
+                  <Instagram className="w-3.5 h-3.5 text-pink-500" /> María García
+                </h4>
                 <span className="text-[10px] text-gray-500">2:41 p.m.</span>
               </div>
               <p className="text-xs text-sky-400 truncate mt-0.5">Sí, qué colores tienen?</p>
@@ -186,7 +190,9 @@ const SimulatorPage = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-start">
-                <h4 className="text-sm font-medium text-white truncate">Carlos López</h4>
+                <h4 className="text-sm font-medium text-white truncate flex items-center gap-1.5">
+                  <MessageCircle className="w-3.5 h-3.5 text-blue-500" /> Carlos López
+                </h4>
                 <span className="text-[10px] text-gray-500">1:15 p.m.</span>
               </div>
               <p className="text-xs text-gray-400 truncate mt-0.5">Necesito hablar con alguien</p>
@@ -203,7 +209,9 @@ const SimulatorPage = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-start">
-                <h4 className="text-sm font-medium text-white truncate">Ana Rodríguez</h4>
+                <h4 className="text-sm font-medium text-white truncate flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-green-500" /> Ana Rodríguez
+                </h4>
                 <span className="text-[10px] text-gray-500">Ayer</span>
               </div>
               <p className="text-xs text-gray-400 truncate mt-0.5">Gracias por la información</p>
@@ -224,7 +232,9 @@ const SimulatorPage = () => {
               <User className="w-5 h-5 text-gray-400" />
             </div>
             <div>
-              <h3 className="font-medium text-white text-sm">Cliente: María García</h3>
+              <h3 className="font-medium text-white text-sm flex items-center gap-2">
+                Cliente: María García <Instagram className="w-4 h-4 text-pink-500" />
+              </h3>
               <p className="text-xs text-gray-400 flex items-center gap-1">
                 <Clock className="w-3 h-3" /> Última act: 2:41:58 p.m.
               </p>

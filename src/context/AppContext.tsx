@@ -5,7 +5,8 @@ import { supabase } from '../lib/supabase';
 
 interface Customer {
   id: string;
-  instagram_user_id: string;
+  platform_user_id: string;
+  platform?: 'instagram' | 'messenger' | 'whatsapp';
   is_bot_active: boolean;
   updated_at: string;
 }
@@ -82,7 +83,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           const oldCust = prevCustomersRef.current.find(c => c.id === newCust.id);
           if (oldCust && oldCust.is_bot_active && !newCust.is_bot_active) {
             new Notification('¡Necesito Ayuda!', {
-              body: `El cliente ${newCust.instagram_user_id} necesita intervención humana.`,
+              body: `El cliente ${newCust.platform_user_id} necesita intervención humana.`,
               icon: '/favicon.svg'
             });
           }
@@ -146,6 +147,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         temperature: res.data.temperature ?? 0.7,
         meta_access_token: res.data.meta_access_token || '',
         meta_verify_token: res.data.meta_verify_token || '',
+        whatsapp_phone_id: res.data.whatsapp_phone_id || '',
+        whatsapp_access_token: res.data.whatsapp_access_token || '',
+        whatsapp_verify_token: res.data.whatsapp_verify_token || '',
         is_active: res.data.is_active ?? true
       });
     } catch (error) {
