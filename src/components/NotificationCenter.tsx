@@ -50,12 +50,12 @@ export default function NotificationCenter() {
               pendingChats.map(c => (
                 <Link
                   key={c.id}
-                  to={`/chats?cliente=${c.instagram_user_id}`}
+                  to={`/chats?cliente=${c.platform_user_id}`}
                   onClick={() => setIsOpen(false)}
                   className="block p-3 border-b border-gray-800/50 hover:bg-gray-800 transition-colors"
                 >
                   <p className="text-xs text-gray-400 mb-1">Requiere ayuda humana</p>
-                  <p className="text-sm font-medium text-gray-200 truncate">{c.instagram_user_id}</p>
+                  <p className="text-sm font-medium text-gray-200 truncate">{c.platform_user_id}</p>
                 </Link>
               ))
             )}
